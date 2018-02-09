@@ -20,11 +20,16 @@ def startStream(event):
     # Clear the text
     inputBox.delete(0, len(entryInput))
 
+    # Call mpv if streamable
     if isStreamable(entryInput):
-        os.system('mpv --fs=yes "{}"'.format(entryInput))
+        exitCode = os.system('mpv --fs=yes "{}"'.format(entryInput))
+
+# Size of the application window
+def getSizeOfWindow(window):
+    return tuple(int(_) for _ in window.geometry().split('+')[0].split('x'))
 
 # Takes a window and centers it on the screen
-def center(window):
+def centerWindow(window):
     window.update_idletasks()
 
     # Size of the total screen
@@ -32,26 +37,42 @@ def center(window):
     h = window.winfo_screenheight()
 
     # Size of the application window
-    size = tuple(int(_) for _ in window.geometry().split('+')[0].split('x'))
+    size = getSizeOfWindow(window)
     x = w/2 - size[0]/2
     y = h/2 - size[1]/2
-
-    # Move to center
     window.geometry("%dx%d+%d+%d" % (size + (x, y)))
+
+# Automatically resize widgets when resizing root window
+def resize(event):
+    currentSize = getSizeOfWindow(root)
+
+    # Padding around x axis
+    padding = 10
+
+    inputBoxSize = (currentSize[0] - padding, 30)
+
+    # Put the inputbox in the middle of the window
+    # with padding
+    inputBox.place(x=padding/2, y=(currentSize[1] - inputBoxSize[1])/2, width=inputBoxSize[0], height=inputBoxSize[1])
 
 if __name__ == '__main__':
     root = Tk()
-    root.geometry("300x200")
+    root.geometry("500x400")
     root.title("Stream Player")
+
+    # Center the application on the screen
+    centerWindow(root)
 
     # Create the entry for urls
     inputBox = Entry(root)
     # Put the inputBox in the gui
-    inputBox.grid(row=1)
+    # inputBox.pack()
 
     # Bind return key to running startStream()
     root.bind('<Return>', startStream)
 
-    # Center the window on the screen
-    center(root)
+    # Whenever resizing root window, call resize
+    # to resize the widgets as well
+    root.bind('<Configure>', resize)
+
     mainloop()
