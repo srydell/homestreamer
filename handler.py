@@ -1,5 +1,6 @@
 from tkinter import *
-import os
+# import os
+import subprocess
 
 # Check if the url is a valid video link
 def isStreamable(entryInput):
@@ -22,7 +23,9 @@ def startStream(event):
 
     # Call mpv if streamable
     if isStreamable(entryInput):
-        exitCode = os.system('mpv --fs=yes "{}"'.format(entryInput))
+        # exitCode = os.system('mpv --fs=yes "{}"'.format(entryInput))
+        cmd = 'open -a vlc {}'.format(entryInput)
+        subprocess.call(cmd.split())
 
 # Size of the application window
 def getSizeOfWindow(window):
