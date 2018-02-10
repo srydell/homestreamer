@@ -21,7 +21,7 @@ def startStream(event):
     # Clear the text
     inputBox.delete(0, len(entryInput))
 
-    # Call mpv if streamable
+    # Call vlc if streamable
     if isStreamable(entryInput):
         # exitCode = os.system('mpv --fs=yes "{}"'.format(entryInput))
         cmd = 'open -a vlc {}'.format(entryInput)
@@ -68,8 +68,6 @@ if __name__ == '__main__':
 
     # Create the entry for urls
     inputBox = Entry(root)
-    # Put the inputBox in the gui
-    # inputBox.pack()
 
     # Bind return key to running startStream()
     root.bind('<Return>', startStream)
