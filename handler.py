@@ -1,5 +1,4 @@
 from tkinter import *
-# import os
 import subprocess
 
 # Check if the url is a valid video link
